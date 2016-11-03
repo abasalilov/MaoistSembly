@@ -1,5 +1,6 @@
 // EventModal.js
 import React, { Component } from 'react';
+import { GiftedChat } from 'react-native-gifted-chat';
 import {
   StatusBar,
   StyleSheet,
@@ -120,12 +121,37 @@ export default class EventModal extends Component {
     this.state = {
     	visible: false,
     	loading: true,
-    	button: styles.button
+    	button: styles.button, 
+      messages: []
     };
+    this.onSend = this.onSend.bind(this);
   }
   componentWillMount() {
   	this.setState({loading:true})
+      this.setState({
+      messages: [
+        {
+          _id: 1,
+          text: 'Hello developer',
+          createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
+          user: {
+            _id: 2,
+            name: 'React Native',
+            avatar: 'https://facebook.github.io/react/img/logo_og.png',
+          },
+        },
+      ],
+    });
   }
+
+  onSend(messages = []) {
+  this.setState((previousState) => {
+    return {
+      messages: GiftedChat.append(previousState.messages, messages),
+    };
+  });
+}
+
   transformDate(dateStr){
     var months = [ "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December" ];
@@ -180,6 +206,13 @@ export default class EventModal extends Component {
   				  <Text style={styles.description}>{this.transformDate(this.state.event.startTime)}</Text>
   				</View>
   				<ScrollView>
+         <GiftedChat
+          messages={this.state.messages}
+          onSend={this.onSend}
+          user={{
+          _id: 1,
+                }}
+          />
   				</ScrollView>
   			</View>
   			)
