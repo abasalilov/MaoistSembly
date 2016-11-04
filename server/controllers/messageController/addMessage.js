@@ -4,7 +4,7 @@ module.exports = (req, res) => {
   var eventId = req.body.eventId;
   var userId = req.body.userId;
   var text = req.body.text
-  console.log('~~~~~~~~~~~~~~~~~~~~~req.body', req.body)
+
   messageModel.addMessage(eventId, userId, text)
   .then((message) => {
     if (message) {
