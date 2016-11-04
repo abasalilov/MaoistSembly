@@ -1,6 +1,7 @@
 var eventModels = require('../../models/eventModels');
 
 module.exports = (req, res) => {
+	console.log('~~~~~~~~~~~~~~~~~~~~~~~~~req', req)
 	if (!req.body.eventId) {
 		res.status(400).send('Invalid Input');
 		return;
