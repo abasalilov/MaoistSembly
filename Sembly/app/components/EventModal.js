@@ -137,38 +137,59 @@ export default class EventModal extends Component {
     this.getFriends()
     this.setState({
       messages: [
-        {
-          _id: 1,
-          text: 'Hello developer',
-          createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
-          user: {
-            _id: 2,
-            name: 'React Native',
-            avatar: 'https://facebook.github.io/react/img/logo_og.png',
-          },
+      {
+        _id: 1,
+        text: 'Hello developer',
+        createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
+        user: {
+          _id: 2,
+          name: 'React Native',
+          avatar: 'https://facebook.github.io/react/img/logo_og.png',
         },
+      },
       ],
     });
   }
 
+  getMessages() {
+    var self = this
+    console.log("testing:1 ", this.props.event);
+    fetch(`${Config.API_URL}/api/events/getMessages`,{
+      method: 'POST',
+      headers: { "Content-Type" : "application/json" },
+      body: JSON.stringify({eventId: this.props.event})
+    })
+    .then(response => {
+      return response.json();
+    })
+    .then(function(response){
+      console.log('the thing is freaking fixed', response)
+      self.setState(() => {
+      return {
+        messages: response,
+      };
+    });
+    })
+    .catch(function(err) {
+      console.error(err)
+    })
+  }
 
   onSend(messages = []) {
-    console.log('this.props', this.props)
     fetch(`${Config.API_URL}/api/events/message`,{
       method: 'POST',
       headers: { "Content-Type" : "application/json" },
       body: JSON.stringify({userId: this.props.user._id, text: messages[0].text, eventId: this.props.event})
     })
     .then(response => {
-      console.log('response', response)
     })
 
-  this.setState((previousState) => {
-    return {
-      messages: GiftedChat.append(previousState.messages, messages),
-    };
-  });
-}
+    this.setState((previousState) => {
+      return {
+        messages: GiftedChat.append(previousState.messages, messages),
+      };
+    });
+  }
 
   transformDate(dateStr){
     var months = [ "January", "February", "March", "April", "May", "June",
@@ -203,7 +224,7 @@ export default class EventModal extends Component {
       return response.json();
     })
     .then( event => {
-      console.log('event', event)
+      this.getMessages()
       this.setState({event: event, loading: false});
     })
     .catch( error => {
@@ -212,7 +233,7 @@ export default class EventModal extends Component {
   }
 
 
-getFriends(search){
+  getFriends(search){
     var friendsArr = [];
     var search = search || '';
     fetch(`${Config.API_URL}/api/friends/getFriends`,{
@@ -224,13 +245,13 @@ getFriends(search){
       return response.json();
     })
     .then( friends => {
-        for (var i = 0; i < friends.length; i++) {
-          friendsArr.push(friends[i].firstName)
-        }
-        this.setState({
-          friends: friendsArr.toString(),
-          loading: false
-        });
+      for (var i = 0; i < friends.length; i++) {
+        friendsArr.push(friends[i].firstName)
+      }
+      this.setState({
+        friends: friendsArr.toString(),
+        loading: false
+      });
 
       if(search.length===0){
         this.setState({
@@ -255,25 +276,25 @@ getFriends(search){
     } else {
       return (
         <View>
-          <Image style={styles.image} source={{uri: this.state.event.image}}/>
-          <View>
-            <Text style={styles.title}> {this.state.event.name}</Text>
-            <Text style={styles.description}>Hosted by: {this.props.user.firstName} {this.props.user.lastName}</Text>
-          </View>
-          <View>
-            <Text style={styles.description}>{this.state.event.tags.join(' ')}</Text>
-            <Text style={styles.description}>{this.transformDate(this.state.event.startTime)} - </Text>
-            <Text style={styles.description}>{this.transformDate(this.state.event.endTime)}</Text>
-          </View>
-          <ScrollView style={styles.chats}>
-         <GiftedChat
-          messages={this.state.messages}
-          onSend={this.onSend}
-          user={{
+        <Image style={styles.image} source={{uri: this.state.event.image}}/>
+        <View>
+        <Text style={styles.title}> {this.state.event.name}</Text>
+        <Text style={styles.description}>Hosted by: {this.props.user.firstName} {this.props.user.lastName}</Text>
+        </View>
+        <View>
+        <Text style={styles.description}>{this.state.event.tags.join(' ')}</Text>
+        <Text style={styles.description}>{this.transformDate(this.state.event.startTime)} - </Text>
+        <Text style={styles.description}>{this.transformDate(this.state.event.endTime)}</Text>
+        </View>
+        <ScrollView style={styles.chats}>
+        <GiftedChat
+        messages={this.state.messages}
+        onSend={this.onSend}
+        user={{
           _id: 1,
-                }}
-          />
-          </ScrollView>
+        }}
+        />
+        </ScrollView>
         </View>
         )
     }
@@ -282,15 +303,17 @@ getFriends(search){
     let context = this;
     return (
       <Modal ref={'EventModal'} onClosed={(e) => this.props.close()} style={styles.modal} isOpen={true}>
-        <View style={styles.container}>
-          {this.getRender()}
-          <View style={styles.absoluteX}>
-            <TouchableOpacity onPress={() => {this.props.close(); context.refs.EventModal.close()}}>
-              <Icon style={styles.closeButton} name='close'/>
-            </TouchableOpacity>
-          </View>
-        </View>
+      <View style={styles.container}>
+      {this.getRender()}
+      <View style={styles.absoluteX}>
+      <TouchableOpacity onPress={() => {this.props.close(); context.refs.EventModal.close()}}>
+      <Icon style={styles.closeButton} name='close'/>
+      </TouchableOpacity>
+      </View>
+      </View>
+      <View>
+      </View>
       </Modal>
-    )
+      )
   }
 }

@@ -1,3 +1,4 @@
 module.exports = {
-  addMessage: require('./addMessage')
+  addMessage: require('./addMessage'),
+  findEventMessages: require('./findEventMessages')
 }

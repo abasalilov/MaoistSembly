@@ -31,4 +31,5 @@ module.exports = function (app, express) {
   app.post('/api/events/location', eventsController.getEvents);
   app.post('/api/events/endEvent', eventsController.endEvent);
   app.post('/api/events/message', messageController.addMessage)
+  app.post('/api/events/getMessages', messageController.getMessages)
 };
