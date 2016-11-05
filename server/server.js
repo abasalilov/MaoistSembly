@@ -20,7 +20,7 @@ require('./routes.js')(app, express);
 
 // start listening to requests on port 3000
 mongoose.connection.on('connected', () => {
-	if (process.env.MONGODB_URI) {
+	if (!process.env.MONGODB_URI) {
 		require('../testData.js');
 	}
 	app.listen(port, () => {
