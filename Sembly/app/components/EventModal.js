@@ -125,11 +125,7 @@ export default class EventModal extends Component {
     this.state = {
       visible: false,
       loading: true,
-<<<<<<< 9284fa690cea981de8683260950e1dd6d8c32d45
       button: styles.button,
-=======
-      button: styles.button, 
->>>>>>> Wire up the back-end
       messages: [],
       friends: null
     };
@@ -139,26 +135,12 @@ export default class EventModal extends Component {
   componentWillMount() {
     this.setState({loading:true})
     this.getFriends()
-    this.setState({
-      messages: [
-      {
-        _id: 1,
-        text: 'Hello developer',
-        createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
-        user: {
-          _id: 2,
-          name: 'React Native',
-          avatar: 'https://facebook.github.io/react/img/logo_og.png',
-        },
-      },
-      ],
-    });
+
   }
 
-<<<<<<< 9284fa690cea981de8683260950e1dd6d8c32d45
   getMessages() {
     var self = this
-    console.log("testing:1 ", this.props.event);
+    console.log("testing:1 ", this.props);
     fetch(`${Config.API_URL}/api/events/getMessages`,{
       method: 'POST',
       headers: { "Content-Type" : "application/json" },
@@ -181,18 +163,12 @@ export default class EventModal extends Component {
   }
 
   onSend(messages = []) {
-=======
-
-  onSend(messages = []) {
-    console.log('this.props', this.props)
->>>>>>> Wire up the back-end
     fetch(`${Config.API_URL}/api/events/message`,{
       method: 'POST',
       headers: { "Content-Type" : "application/json" },
       body: JSON.stringify({userId: this.props.user._id, text: messages[0].text, eventId: this.props.event})
     })
     .then(response => {
-<<<<<<< 9284fa690cea981de8683260950e1dd6d8c32d45
     })
 
     this.setState((previousState) => {
@@ -201,17 +177,6 @@ export default class EventModal extends Component {
       };
     });
   }
-=======
-      console.log('response', response)
-    })
-
-  this.setState((previousState) => {
-    return {
-      messages: GiftedChat.append(previousState.messages, messages),
-    };
-  });
-}
->>>>>>> Wire up the back-end
 
   transformDate(dateStr){
     var months = [ "January", "February", "March", "April", "May", "June",
@@ -246,11 +211,7 @@ export default class EventModal extends Component {
       return response.json();
     })
     .then( event => {
-<<<<<<< 9284fa690cea981de8683260950e1dd6d8c32d45
       this.getMessages()
-=======
-      console.log('event', event)
->>>>>>> Wire up the back-end
       this.setState({event: event, loading: false});
     })
     .catch( error => {
@@ -258,13 +219,8 @@ export default class EventModal extends Component {
     });
   }
 
-<<<<<<< 9284fa690cea981de8683260950e1dd6d8c32d45
 
   getFriends(search){
-=======
-    
-getFriends(search){
->>>>>>> Wire up the back-end
     var friendsArr = [];
     var search = search || '';
     fetch(`${Config.API_URL}/api/friends/getFriends`,{
@@ -276,7 +232,6 @@ getFriends(search){
       return response.json();
     })
     .then( friends => {
-<<<<<<< 9284fa690cea981de8683260950e1dd6d8c32d45
       for (var i = 0; i < friends.length; i++) {
         friendsArr.push(friends[i].firstName)
       }
@@ -284,15 +239,6 @@ getFriends(search){
         friends: friendsArr.toString(),
         loading: false
       });
-=======
-        for (var i = 0; i < friends.length; i++) {
-          friendsArr.push(friends[i].firstName)
-        }
-        this.setState({
-          friends: friendsArr.toString(),
-          loading: false
-        });
->>>>>>> Wire up the back-end
 
       if(search.length===0){
         this.setState({
@@ -317,41 +263,22 @@ getFriends(search){
     } else {
       return (
         <View>
-<<<<<<< 9284fa690cea981de8683260950e1dd6d8c32d45
-        <Image style={styles.image} source={{uri: this.state.event.image}}/>
+          <Image style={styles.image} source={{uri: this.state.event.image}}/>
+            <View>
+              <Text style={styles.title}> {this.state.event.name}</Text>
+              <Text style={styles.description}>Hosted by: {this.props.user.firstName} {this.props.user.lastName}</Text>
+            </View>
         <View>
-        <Text style={styles.title}> {this.state.event.name}</Text>
-        <Text style={styles.description}>Hosted by: {this.props.user.firstName} {this.props.user.lastName}</Text>
-        </View>
-        <View>
-        <Text style={styles.description}>{this.state.event.tags.join(' ')}</Text>
-        <Text style={styles.description}>{this.transformDate(this.state.event.startTime)} - </Text>
-        <Text style={styles.description}>{this.transformDate(this.state.event.endTime)}</Text>
+          <Text style={styles.description}>{this.state.event.tags.join(' ')}</Text>
+          <Text style={styles.description}>{this.transformDate(this.state.event.startTime)} - </Text>
+          <Text style={styles.description}>{this.transformDate(this.state.event.endTime)}</Text>
         </View>
         <ScrollView style={styles.chats}>
         <GiftedChat
+        keyboardDismissMode='on-drag' 
         messages={this.state.messages}
         onSend={this.onSend}
-        user={{
-=======
-          <Image style={styles.image} source={{uri: this.state.event.image}}/>
-          <View>
-            <Text style={styles.title}> {this.state.event.name}</Text>
-            <Text style={styles.description}> Hosted by: {this.props.user.firstName} {this.props.user.lastName}</Text>
-             <Text style={styles.description}> Messages Can be seen by: {this.state.friends}</Text>
-          </View>
-          <View>
-            <Text style={styles.description}>{this.transformDate(this.state.event.startTime)}</Text>
-          </View>
-          <ScrollView>
-         <GiftedChat
-          messages={this.state.messages}
-          onSend={this.onSend}
-          user={{
->>>>>>> Wire up the back-end
-          _id: 1,
-        }}
-        />
+        user={{ _id: 1 }}/>
         </ScrollView>
         </View>
         )
